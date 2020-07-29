@@ -29,7 +29,7 @@ namespace ListCoreApp.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(User user) {
             if (_context.Users.Where(u => u.Email == user.Email).Any()) return BadRequest("already exists");
-            if (user.Password == null) return BadRequest(user); //return BadRequest("password cannot be null");
+            if (user.Password == null) return BadRequest(user);
             var (hashedPassword, salt) = PasswordHasher.Hash(user.Password);
             user.Password = hashedPassword;
             user.SecurityHash = salt;

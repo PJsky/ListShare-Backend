@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ListCoreApp.Data;
 using ListCoreApp.Models;
+using ListCoreApp.Requests.Item;
+using ListCoreApp.Responses.Item;
 
 namespace ListCoreApp.Controllers
 {
@@ -78,12 +80,28 @@ namespace ListCoreApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(Item item)
+        public async Task<ActionResult<Item>> PostItem(CreateItemRequest request)
         {
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.ListAccessCode).FirstAsync();
+                if (!itemList.IsPublic && itemList.ListPassword != request.ListPassword) return BadRequest("No such list to add to");
+                _context.Items.Add(new Item
+                {
+                    Name = request.Name,
+                    ListId = itemList.Id
+                });
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetItem", new { id = item.Id }, item);
+                return Ok(new SuccessfulItemCreationResponse()
+                {
+                    ItemName = request.Name,
+                    ListName = itemList.Name
+                });
+            }
+            catch {
+                return BadRequest("Proper list access code needed");
+            }
         }
 
         // DELETE: api/Items/5

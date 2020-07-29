@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using ListCoreApp.Data;
 using ListCoreApp.Models;
 using Microsoft.CodeAnalysis;
+using ListCoreApp.Requests;
+using ListCoreApp.Helpers;
+using ListCoreApp.Responses;
+using ListCoreApp.Responses.ItemList;
 
 namespace ListCoreApp.Controllers
 {
@@ -24,9 +28,18 @@ namespace ListCoreApp.Controllers
 
         // GET: api/ItemLists
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ItemList>>> GetItemLists()
+        public async Task<ActionResult<IEnumerable<ItemList>>> GetItemLists(GetListRequest request)
         {
-            return await _context.ItemLists.ToListAsync();
+            var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.AccessCode).FirstAsync();
+            itemList.Items = await _context.Items.Where(i => i.ListId == itemList.Id).ToListAsync();
+            var items = itemList.Items.Select(i => new { i.Name, i.IsDone});
+            if (itemList.IsPublic || itemList.ListPassword == request.ListPassword) return Ok(new SuccessfulGetListResponse() { 
+                Name = itemList.Name,
+                AccessCode = itemList.AccessCode,
+                IsPublic = itemList.IsPublic,
+                Items = items
+            });;
+            return BadRequest("Wrong list access code or password");
         }
 
         // GET: api/ItemLists/5
@@ -44,48 +57,29 @@ namespace ListCoreApp.Controllers
             return itemList;
         }
 
-        // PUT: api/ItemLists/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutItemList(int id, ItemList itemList)
-        {
-            if (id != itemList.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(itemList).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemListExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/ItemLists
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ItemList>> PostItemList(ItemList itemList)
+        public async Task<ActionResult<ItemList>> PostItemList(CreateListRequest itemList)
         {
-            _context.ItemLists.Add(itemList);
+            const int accessCodeLength = 8;
+            if (itemList.IsPublic == false && itemList.ListPassword == null) return BadRequest("Private list needs a password");
+
+            var accessCode = AccessCodeGenerator.GetAccessCode(accessCodeLength, _context);
+            _context.ItemLists.Add(new ItemList() { 
+                Id = itemList.Id,
+                Name = itemList.Name,
+                IsPublic = itemList.IsPublic,
+                ListPassword = itemList.ListPassword,
+                AccessCode = accessCode
+            });
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetItemList", new { id = itemList.Id }, itemList);
+            return Ok(new SuccessfulListCreation(){
+                Name = itemList.Name,
+                AccessCode = accessCode,
+            });;
         }
 
         // DELETE: api/ItemLists/5

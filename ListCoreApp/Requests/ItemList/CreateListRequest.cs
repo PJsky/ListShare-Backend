@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ListCoreApp.Models
+namespace ListCoreApp.Requests
 {
-    public class ItemList
+    public class CreateListRequest
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string AccessCode { get; set; }
         public bool IsPublic { get; set; }
         public string ListPassword { get; set; }
-        public List<Item> Items { get; set; }
-        public ICollection<UserList> UserLists { get; set; }
-
     }
 }
