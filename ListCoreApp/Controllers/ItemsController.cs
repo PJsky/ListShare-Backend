@@ -47,33 +47,22 @@ namespace ListCoreApp.Controllers
         // PUT: api/Items/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
+        [HttpPut]
+        public async Task<IActionResult> PutItem(UpdateItemRequest request)
         {
-            if (id != item.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(item).State = EntityState.Modified;
-
             try
             {
+                var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.ListAccessCode).FirstAsync();
+                if (!itemList.IsPublic && itemList.ListPassword != request.ListPassword) return BadRequest("Wrong list password");
+                var item = await _context.Items.Where(i => i.Id == request.ItemId).FirstAsync();
+                item.IsDone = request.IsDone;
                 await _context.SaveChangesAsync();
+                return Ok(request.IsDone);
             }
-            catch (DbUpdateConcurrencyException)
+            catch 
             {
-                if (!ItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest("Proper list access code needed");
             }
-
-            return NoContent();
         }
 
         // POST: api/Items
@@ -85,7 +74,7 @@ namespace ListCoreApp.Controllers
             try
             {
                 var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.ListAccessCode).FirstAsync();
-                if (!itemList.IsPublic && itemList.ListPassword != request.ListPassword) return BadRequest("No such list to add to");
+                if (!itemList.IsPublic && itemList.ListPassword != request.ListPassword) return BadRequest("Wrong list password");
                 _context.Items.Add(new Item
                 {
                     Name = request.Name,
@@ -104,20 +93,22 @@ namespace ListCoreApp.Controllers
             }
         }
 
-        // DELETE: api/Items/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Item>> DeleteItem(int id)
+        // DELETE: api/Items
+        [HttpDelete]
+        public async Task<ActionResult<Item>> DeleteItem(ItemDeleteRequest request)
         {
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
+            try
             {
-                return NotFound();
+                var item = await _context.Items.FindAsync(request.ItemId);
+                var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.ListAccessCode).FirstAsync();
+                if (!itemList.IsPublic && itemList.ListPassword != request.ListPassword) return BadRequest("Wrong list password");
+                _context.Items.Remove(item);
+                await _context.SaveChangesAsync();
+                return item;
             }
-
-            _context.Items.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return item;
+            catch {
+                return BadRequest("Proper list access code needed");
+            }
         }
 
         private bool ItemExists(int id)
