@@ -75,15 +75,17 @@ namespace ListCoreApp.Controllers
             {
                 var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.ListAccessCode).FirstAsync();
                 if (!itemList.IsPublic && itemList.ListPassword != request.ListPassword) return BadRequest("Wrong list password");
-                _context.Items.Add(new Item
+                var item = new Item
                 {
                     Name = request.Name,
                     ListId = itemList.Id
-                });
+                };
+                _context.Items.Add(item);
                 await _context.SaveChangesAsync();
 
                 return Ok(new SuccessfulItemCreationResponse()
                 {
+                    ItemId = item.Id,
                     ItemName = request.Name,
                     ListName = itemList.Name
                 });

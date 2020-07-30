@@ -65,7 +65,7 @@ namespace ListCoreApp.Controllers
         public async Task<ActionResult<ItemList>> PostItemList(CreateListRequest itemList)
         {
             const int accessCodeLength = 8;
-            if (itemList.IsPublic == false && itemList.ListPassword == null) return BadRequest("Private list needs a password");
+            if (itemList.IsPublic == false && (itemList.ListPassword == null || itemList.ListPassword=="")) return BadRequest("Private list needs a password");
 
             var accessCode = AccessCodeGenerator.GetAccessCode(accessCodeLength, _context);
             _context.ItemLists.Add(new ItemList() { 
