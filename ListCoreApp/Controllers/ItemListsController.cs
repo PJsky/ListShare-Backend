@@ -32,7 +32,7 @@ namespace ListCoreApp.Controllers
         {
             var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.AccessCode).FirstAsync();
             itemList.Items = await _context.Items.Where(i => i.ListId == itemList.Id).ToListAsync();
-            var items = itemList.Items.Select(i => new { i.Name, i.IsDone});
+            var items = itemList.Items.Select(i => new { i.Id, i.Name, i.IsDone});
             if (itemList.IsPublic || itemList.ListPassword == request.ListPassword) return Ok(new SuccessfulGetListResponse() { 
                 Name = itemList.Name,
                 AccessCode = itemList.AccessCode,
