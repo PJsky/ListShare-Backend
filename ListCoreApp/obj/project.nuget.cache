@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oooEkKtDZRPSLCzNi0P7qVPFTbFpBU83RrgwrqdtNcoUl0iZLy458CFJnw2suxa7oO744za1TWaWl+0p1bRPJA==",
+  "dgSpecHash": "adZLwZyYCnyhXPKDEXJhu3pC0qrz1O416hU2M35wmejWpbjNIiLJosP/FSY91+bAiS36Pv9lxN8yXDbm4/vEEw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\RAMAND\\source\\repos\\ListCoreApp\\ListCoreApp\\ListCoreApp.csproj",
+  "projectFilePath": "C:\\Users\\RAMAND\\Desktop\\c#\\LifeList\\LifeList\\ListCoreApp\\ListCoreApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\RAMAND\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.6\\microsoft.aspnetcore.authentication.jwtbearer.3.1.6.nupkg.sha512",
     "C:\\Users\\RAMAND\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",

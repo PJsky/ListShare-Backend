@@ -28,7 +28,7 @@ namespace ListCoreApp.Controllers
 
         // GET: api/ItemLists
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ItemList>>> GetItemLists(GetListRequest request)
+        public async Task<ActionResult<IEnumerable<ItemList>>> GetItemLists([FromQuery] GetListRequest request)
         {
             var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.AccessCode).FirstAsync();
             itemList.Items = await _context.Items.Where(i => i.ListId == itemList.Id).ToListAsync();
@@ -43,18 +43,19 @@ namespace ListCoreApp.Controllers
         }
 
         // GET: api/ItemLists/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ItemList>> GetItemList(int id)
+        [HttpGet("{accessCode}")]
+        public async Task<ActionResult<ItemList>> GetItemList(string accessCode)
         {
-            var itemList = await _context.ItemLists.FindAsync(id);
-            //itemList.Items = _context.Items.ToList();
-
-            if (itemList == null)
+            try
             {
-                return NotFound();
+                var itemList = await _context.ItemLists.Where(il => il.AccessCode == "#" + accessCode).FirstAsync();
+                //itemList.Items = _context.Items.ToList();
+            }
+            catch {
+                return BadRequest("List not found");
             }
 
-            return itemList;
+            return Ok(accessCode);
         }
 
         // POST: api/ItemLists

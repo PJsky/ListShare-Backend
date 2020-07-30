@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\RAMAND\\source\\repos\\ListCoreApp\\ListCoreApp\\ListCoreApp.csproj": {}
+    "C:\\Users\\RAMAND\\Desktop\\c#\\LifeList\\LifeList\\ListCoreApp\\ListCoreApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\RAMAND\\source\\repos\\ListCoreApp\\ListCoreApp\\ListCoreApp.csproj": {
+    "C:\\Users\\RAMAND\\Desktop\\c#\\LifeList\\LifeList\\ListCoreApp\\ListCoreApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\RAMAND\\source\\repos\\ListCoreApp\\ListCoreApp\\ListCoreApp.csproj",
+        "projectUniqueName": "C:\\Users\\RAMAND\\Desktop\\c#\\LifeList\\LifeList\\ListCoreApp\\ListCoreApp.csproj",
         "projectName": "ListCoreApp",
-        "projectPath": "C:\\Users\\RAMAND\\source\\repos\\ListCoreApp\\ListCoreApp\\ListCoreApp.csproj",
+        "projectPath": "C:\\Users\\RAMAND\\Desktop\\c#\\LifeList\\LifeList\\ListCoreApp\\ListCoreApp.csproj",
         "packagesPath": "C:\\Users\\RAMAND\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\RAMAND\\source\\repos\\ListCoreApp\\ListCoreApp\\obj\\",
+        "outputPath": "C:\\Users\\RAMAND\\Desktop\\c#\\LifeList\\LifeList\\ListCoreApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
