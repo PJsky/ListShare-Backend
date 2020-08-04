@@ -76,17 +76,23 @@ namespace ListCoreApp.Controllers
         [HttpGet("starred")]
         public async Task<ActionResult> GetStarred()
         {
-            var tokenBearerEmail = TokenBearerValueGetter.getValue(Request, "email");
-            var userId = await _context.Users.Where(u => u.Email == tokenBearerEmail)
-                                             .Select(u => u.Id)
-                                             .FirstAsync();
-            var starredListsIds = await _context.UserLists.Where(ul => ul.UserId == userId)
-                                                          .Select(ul => ul.ListId)
-                                                          .ToListAsync();
-            var starredLists = await _context.ItemLists.Where(il => starredListsIds.Contains(il.Id))
-                                                        .Select(il => new { il.Name, il.AccessCode})
-                                                        .ToListAsync();
-            return Ok(starredLists);
+            try
+            {
+                var tokenBearerEmail = TokenBearerValueGetter.getValue(Request, "email");
+                var userId = await _context.Users.Where(u => u.Email == tokenBearerEmail)
+                                                 .Select(u => u.Id)
+                                                 .FirstAsync();
+                var starredListsIds = await _context.UserLists.Where(ul => ul.UserId == userId)
+                                                              .Select(ul => ul.ListId)
+                                                              .ToListAsync();
+                var starredLists = await _context.ItemLists.Where(il => starredListsIds.Contains(il.Id))
+                                                            .Select(il => new { il.Name, il.AccessCode })
+                                                            .ToListAsync();
+                return Ok(starredLists);
+            }
+            catch {
+                return BadRequest("Nothing found");
+            }
         }
 
         [HttpPost("starred")]
