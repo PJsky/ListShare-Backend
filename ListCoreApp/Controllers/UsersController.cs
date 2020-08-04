@@ -1,12 +1,15 @@
 ﻿using ListCoreApp.Data;
 using ListCoreApp.Helpers;
 using ListCoreApp.Models;
+using ListCoreApp.Requests.StarredList;
 using ListCoreApp.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,7 +44,7 @@ namespace ListCoreApp.Controllers
             catch (Exception e) {
                 return BadRequest(e.Message);
             }
-            var token = TokenGenerator.GetToken(_config);
+            var token = TokenGenerator.GetToken(_config, user.Email);
             return Ok(new SuccessfulRegisterResponse
             {
                 Id = user.Id,
@@ -57,7 +60,7 @@ namespace ListCoreApp.Controllers
                 var foundUser = await _context.Users.Where(u => u.Email == user.Email).FirstAsync();
                 if (!PasswordValidator.Validate(user.Password, foundUser.SecurityHash, foundUser.Password))
                     return BadRequest("Wrong Password");
-                var token = TokenGenerator.GetToken(_config);
+                var token = TokenGenerator.GetToken(_config, user.Email);
                 return Ok(new SuccesfulLoginResponse
                 {
                     Token = token,
@@ -67,6 +70,57 @@ namespace ListCoreApp.Controllers
             catch
             {
                 return BadRequest("such account does not exist");
+            }
+        }
+
+        [HttpGet("starred")]
+        public async Task<ActionResult> GetStarred()
+        {
+            try
+            {
+                var tokenBearerEmail = TokenBearerValueGetter.getValue(Request, "email");
+                var userId = await _context.Users.Where(u => u.Email == tokenBearerEmail)
+                                                 .Select(u => u.Id)
+                                                 .FirstAsync();
+                var starredListsIds = await _context.UserLists.Where(ul => ul.UserId == userId)
+                                                              .Select(ul => ul.ListId)
+                                                              .ToListAsync();
+                var starredLists = await _context.ItemLists.Where(il => starredListsIds.Contains(il.Id))
+                                                            .Select(il => new { il.Name, il.AccessCode })
+                                                            .ToListAsync();
+                return Ok(starredLists);
+            }
+            catch {
+                return BadRequest("Nothing found");
+            }
+        }
+
+        [HttpPost("starred")]
+        public async Task<ActionResult> PostStarred(StarListRequest request)
+        {
+            var listAccessCode = _context.ItemLists.Where(il => il.Id == request.ListId)
+                                                    .Select(il => il.AccessCode).First();
+            if (listAccessCode != request.AccessCode) return BadRequest("Invalid request: pass");
+            try
+            {
+                var tokenBearerEmail = TokenBearerValueGetter.getValue(Request, "email");
+                var userId = await _context.Users.Where(u => u.Email == tokenBearerEmail)
+                                                 .Select(u => u.Id)
+                                                 .FirstAsync();
+
+                var userList = new UserList()
+                {
+                    UserId = userId,
+                    ListId = request.ListId
+                };
+
+                _context.UserLists.Add(userList);
+                await _context.SaveChangesAsync();
+
+                return Ok("Starred a list");
+            }
+            catch {
+                return BadRequest("Invalid request");
             }
         }
     }

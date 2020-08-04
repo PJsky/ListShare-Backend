@@ -20,6 +20,7 @@ namespace ListCoreApp.Data
                 .WithMany(l => l.Items)
                 .HasForeignKey(i => i.ListId);
 
+            //Many-to-many
             modelBuilder.Entity<UserList>()
                 .HasKey(ul => new { ul.UserId, ul.ListId });
             modelBuilder.Entity<UserList>()
