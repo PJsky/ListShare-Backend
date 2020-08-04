@@ -10,10 +10,10 @@ namespace ListCoreApp.Helpers
     public static class TokenGenerator
     {
 
-        public static string GetToken(IConfiguration config)
+        public static string GetToken(IConfiguration config, string email)
         {
             var jwt = new JwtService(config);
-            var token = jwt.GenerateSecurityToken("fake@email.com");
+            var token = jwt.GenerateSecurityToken(email);
             return token;
         }
     }
