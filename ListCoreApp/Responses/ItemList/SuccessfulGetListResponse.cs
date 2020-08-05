@@ -12,6 +12,7 @@ namespace ListCoreApp.Responses.ItemList
         public string Name { get; set; }
         public string AccessCode { get; set; }
         public bool IsPublic { get; set; }
+        public bool IsStarred { get; set; }
         public IEnumerable<Object> Items { get; set; }
 
     }

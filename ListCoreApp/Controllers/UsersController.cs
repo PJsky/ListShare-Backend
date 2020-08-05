@@ -78,10 +78,11 @@ namespace ListCoreApp.Controllers
         {
             try
             {
-                var tokenBearerEmail = TokenBearerValueGetter.getValue(Request, "email");
+                /*var tokenBearerEmail = TokenBearerValueGetter.getValue(Request, "email");
                 var userId = await _context.Users.Where(u => u.Email == tokenBearerEmail)
                                                  .Select(u => u.Id)
-                                                 .FirstAsync();
+                                                 .FirstAsync();*/
+                var userId = UserIdGetter.getIdFromToken(Request, _context);
                 var starredListsIds = await _context.UserLists.Where(ul => ul.UserId == userId)
                                                               .Select(ul => ul.ListId)
                                                               .ToListAsync();
@@ -98,8 +99,9 @@ namespace ListCoreApp.Controllers
         [HttpPost("starred")]
         public async Task<ActionResult> PostStarred(StarListRequest request)
         {
-            var listAccessCode = _context.ItemLists.Where(il => il.Id == request.ListId)
-                                                    .Select(il => il.AccessCode).First();
+            var list = await _context.ItemLists.Where(il => il.AccessCode == request.AccessCode).FirstAsync();
+            var listAccessCode = list.AccessCode;
+
             if (listAccessCode != request.AccessCode) return BadRequest("Invalid request: pass");
             try
             {
@@ -111,7 +113,7 @@ namespace ListCoreApp.Controllers
                 var userList = new UserList()
                 {
                     UserId = userId,
-                    ListId = request.ListId
+                    ListId = list.Id
                 };
 
                 _context.UserLists.Add(userList);
@@ -121,6 +123,24 @@ namespace ListCoreApp.Controllers
             }
             catch {
                 return BadRequest("Invalid request");
+            }
+        }
+
+        [HttpDelete("starred")]
+        public async Task<ActionResult> DeleteStarred(StarListRequest request) {
+            var list = await _context.ItemLists.Where(il => il.AccessCode == request.AccessCode).FirstAsync();
+            var listAccessCode = list.AccessCode;
+            if (listAccessCode != request.AccessCode) return BadRequest("Invalid request: pass");
+            try
+            {
+                var userId = UserIdGetter.getIdFromToken(Request, _context);
+                var userListToDelete = await _context.UserLists.Where(ul => ul.ListId == list.Id && ul.UserId == userId).FirstAsync();
+                _context.UserLists.Remove(userListToDelete);
+                await _context.SaveChangesAsync();
+                return Ok("Unstarred a list");
+            }
+            catch {
+                return BadRequest("Not logged in");
             }
         }
     }

@@ -33,12 +33,23 @@ namespace ListCoreApp.Controllers
             var itemList = await _context.ItemLists.Where(il => il.AccessCode == request.AccessCode).FirstAsync();
             itemList.Items = await _context.Items.Where(i => i.ListId == itemList.Id).ToListAsync();
             var items = itemList.Items.Select(i => new { i.Id, i.Name, i.IsDone});
+            var isStarred = false;
+            try
+            {
+                var userId = UserIdGetter.getIdFromToken(Request, _context);
+                isStarred = _context.UserLists.Where(ul => ul.ListId == itemList.Id)
+                                            .Select(ul => ul.UserId)
+                                            .Contains(userId);
+            }
+            catch { 
+            }
             if (itemList.IsPublic || itemList.ListPassword == request.ListPassword) return Ok(new SuccessfulGetListResponse() { 
                 Name = itemList.Name,
                 AccessCode = itemList.AccessCode,
                 IsPublic = itemList.IsPublic,
-                Items = items
-            });;
+                Items = items,
+                IsStarred = isStarred
+            });
             return BadRequest("Wrong list access code or password");
         }
 

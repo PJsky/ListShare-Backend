@@ -7,8 +7,8 @@ namespace ListCoreApp.Requests.StarredList
 {
     public class StarListRequest
     {
-        public int UserId { get; set; }
-        public int ListId { get; set; }
+        //public int UserId { get; set; }
+        //public int ListId { get; set; }
         public string AccessCode { get; set; }
     }
 }
