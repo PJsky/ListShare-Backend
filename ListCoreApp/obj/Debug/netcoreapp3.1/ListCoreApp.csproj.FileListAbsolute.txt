@@ -157,8 +157,6 @@ C:\Users\RAMAND\source\repos\ListCoreApp\ListCoreApp\bin\Debug\netcoreapp3.1\tr\
 C:\Users\RAMAND\source\repos\ListCoreApp\ListCoreApp\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\RAMAND\source\repos\ListCoreApp\ListCoreApp\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.csprojAssemblyReference.cache
-C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.csproj.CoreCompileInputs.cache
-C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.AssemblyInfoInputs.cache
 C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.AssemblyInfo.cs
 C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.dll
@@ -314,3 +312,6 @@ C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1
 C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\staticwebassets\ListCoreApp.StaticWebAssets.Manifest.cache
 C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\staticwebassets\ListCoreApp.StaticWebAssets.xml
 C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.genruntimeconfig.cache
+C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.CommandLine.dll
+C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.csproj.CoreCompileInputs.cache
+C:\Users\RAMAND\Desktop\c#\LifeList\LifeList\ListCoreApp\obj\Debug\netcoreapp3.1\ListCoreApp.MvcApplicationPartsAssemblyInfo.cache
